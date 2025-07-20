@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ job.title }}</title>
+     <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .resumes { margin-top: 2em; }
+        form { margin-top: 2em; padding: 1em; border: 1px solid #ccc; }
+        h1, h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>{{ job.title }}</h1>
+    <p>{{ job.text|linebreaks }}</p>
+
+    <div class="resumes">
+        <h2>Ranked Resumes</h2>
+        <ol>
+            {% for resume, score in ranked_resumes %}
+                <li>
+                    <strong>{{ resume.title }}</strong> - Score: {{ score|floatformat:2 }}
+                    (<a href="{{ resume.resume_file.url }}" target="_blank">View PDF</a>)
+                </li>
+            {% empty %}
+                <li>No resumes uploaded for this job yet. Upload one to see the ranking.</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        <h2>Upload a New Resume</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
